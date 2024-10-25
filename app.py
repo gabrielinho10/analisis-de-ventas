@@ -6,7 +6,6 @@ def cargar_datos():
     try:
         df = pd.read_csv('ventas.csv', encoding='latin1')  # Ajusta la codificación según sea necesario
         df.columns = df.columns.str.strip()  # Elimina espacios en blanco de los nombres de columnas
-        st.write("Columnas disponibles:", df.columns.tolist())  # Imprime las columnas disponibles para depuración
         return df
     except Exception as e:
         st.error(f"Error al cargar los datos: {e}")
