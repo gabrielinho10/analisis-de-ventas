@@ -1,24 +1,15 @@
 import streamlit as st
 import pandas as pd
-import mysql.connector
 import plotly.express as px
 
-# Función para obtener la conexión a MySQL
-def obtener_conexion():
-    return mysql.connector.connect(
-        host="localhost",  # Cambia según la configuración de tu servidor MySQL
-        user="root",  # Cambia por tu usuario de MySQL
-        password="administrador",  # Cambia por tu contraseña de MySQL
-        database="ventas_db"  # Cambia por tu base de datos
-    )
-
-# Función para cargar datos desde MySQL
+# Función para cargar datos desde un archivo CSV
 def cargar_datos():
-    conn = obtener_conexion()  # Conectar a la base de datos
-    query = "SELECT * FROM ventas"  # Consulta SQL para obtener todos los datos de la tabla 'ventas'
-    df = pd.read_sql(query, conn)  # Leer los datos en un DataFrame de Pandas
-    conn.close()  # Cerrar la conexión a la base de datos
-    return df  # Retornar los datos como DataFrame
+    try:
+        return pd.read_csv('data/ventas.csv')  # Asegúrate de que la ruta sea correcta
+    except Exception as e:
+        st.error(f"Error al cargar los datos: {e}")
+        return pd.DataFrame()  # Devuelve un DataFrame vacío en caso de error
+
 
 # Título del dashboard
 st.title("Dashboard de Análisis de Ventas")
@@ -26,7 +17,7 @@ st.title("Dashboard de Análisis de Ventas")
 # Describe dashboard
 st.write("Este dashboard permite analizar las ventas por categoría y producto.")
 
-# Cargar datos desde ventas_db
+# Cargar datos desde ventas.csv
 df = cargar_datos()
 
 # Filtros 
@@ -58,3 +49,4 @@ st.dataframe(df_filtrado)  # Mostrar la tabla con los datos filtrados
 # Mostrar resumen estadístico de las ventas
 st.subheader("Resumen Estadístico de las Ventas")
 st.write(df_filtrado.describe())
+
